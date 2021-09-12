@@ -1,0 +1,125 @@
+//STEP 0 DAFTAR AWS AMAZON FREE TIER
+
+1. Daftar amazon free tier
+2. Deploy EC2 free tier
+3. Pointing domain 
+
+
+//STEP 1: INSTALL APACHE
+===========================
+
+=> UPDATE
+sudo apt update
+
+=> install apache
+sudo apt install apache2
+
+=> start Apache and have it run on system boot
+sudo systemctl enable --now apache2
+
+=> check status apache running atau tidak kalau running akan muncul pesan running
+service apache status
+
+//STEP 2: INSTALL MYSQL
+=============================
+=> install mysql
+sudo apt install mysql-server
+=> check running
+sudo mysql
+
+//STEP 3 INSTALL PHP
+==============================
+=> install PHP
+sudo apt install php libapache2-mod-php php-mysql
+
+
+//STEP 4 CREATE DATABASE (DB, USER, PASSWORD)
+==============================
+=> Create Database
+CREATE DATABASE ininamadatabaseklean;
+
+=> Create user
+CREATE USER 'useruntukdbklean'@'localhost' IDENTIFIED BY 'inipassworddatabase';
+
+=> Grant Access
+GRANT ALL PRIVILEGES ON ininamadatabaseklean.* TO 'useruntukdbklean'@'localhost';
+
+=> Flush PRIVILEGES
+FLUSH PRIVILEGES;
+
+=> Exit
+exit;
+
+//STEP 5 CREATE APACHE SERVER BLOCK
+==============================
+
+sudo nano /etc/apache2/sites-available/domainklean.xx.conf
+
+
+<VirtualHost *:80>
+  ServerAdmin mailklean@gmail.com.com
+  DocumentRoot /var/www/domainklean.xx/
+  ServerName domainklean.xx
+  ServerAlias www.domainklean.xx
+
+  <Directory /var/www/domainklean.xx/>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Order allow,deny
+    allow from all
+  </Directory> 
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+=> enable
+sudo a2ensite domainklean.xx.conf
+
+//STEP 6 DOWNLOAD WORDPRESS
+==============================
+
+=> Navigate to
+cd /var/www/
+
+=> Download WORDPRESS
+wget https://wordpress.org/latest.zip
+
+=> Unzip latest.zip (NOTE: install unzip kalo belum install)
+unzip latest.zip
+
+=> Rename directory wordpress to domainklean.com
+mv wordpress domainklean.xx
+
+=> Modify permission
+cd /root/
+sudo chown -R www-data:www-data /var/www/
+sudo chmod -R 755 /var/www/
+
+=> Check Apache settings, enable rewrite module and restart server:
+sudo apachectl configtest
+sudo a2enmod rewrite
+sudo systemctl restart apache2.service
+
+//STEP 7 INSTALL CERTBOT UNTUK LETS ENCRYPT FREE SSL
+==============================
+
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+sudo apt update
+
+sudo apt install certbot python3-certbot-apache
+sudo certbot --apache
+
+MASUKAN EMAIL UNTUK REGISTRASI SSL DAN IKUTI PETUNJUKNYA
+
+=> CEK
+sudo systemctl status certbot.timer
+
+//STEP 8 INSTALL PHPMYADMIN
+==============================
+
+=> Jalankan install
+sudo apt install phpmyadmin
+*note:  apache2 (pakai tab keyboard)
+*note: pilih ok
+
