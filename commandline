@@ -16,6 +16,8 @@ sudo apt install apache2
 
 => start Apache and have it run on system boot
 sudo systemctl enable --now apache2
+or
+sudo systemctl status apache2
 
 => check status apache running atau tidak kalau running akan muncul pesan running
 service apache status
